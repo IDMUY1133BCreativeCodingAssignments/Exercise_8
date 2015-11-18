@@ -1,4 +1,5 @@
-var system;
+//http://p5js.org/examples/examples/Simulate_Particle_System.php
+
 var meteorArray = [];
 var colors = []; //changes colors of meteors ? 
 
@@ -26,7 +27,7 @@ function draw() {
     background(0);  
     for(var i = 0; i <= meteorArray.length - 1; i++)
     {
-        meteorArray[i].addMeteors();
+        meteorArray[i].addMeteors(i);
         meteorArray[i].run();
     }
 }
@@ -43,8 +44,8 @@ var MeteorSystem = function(position){
     this.meteors = []; //meteors in that system
 };
 
-MeteorSystem.prototype.addMeteors = function(){  
-  this.meteors.push(new Meteor(this.origin));   
+MeteorSystem.prototype.addMeteors = function(num){  
+  this.meteors.push(new Meteor(this.origin, num));   
 };
 
 MeteorSystem.prototype.run = function(){
@@ -57,9 +58,17 @@ MeteorSystem.prototype.run = function(){
   }
 }; 
 
-var Meteor = function(position, num){//num determines motion? (maybe) 
+var Meteor = function(position, whichVel){
     //this.velocity = createVector(random(-1, 1), random(-1, 0)); //will only go in one general direction
+    if(whichVel == 0){
     this.velocity = createVector(random(2, 3), random(2, 3)); //is a straight ish line (tail of meteor)
+    }
+    if(whichVel == 1){
+        this.velocity = createVector(random(-1, 1), random(-1, 0));
+    }
+    if(whichVel == 2){
+        this.velocity = createVector(random(4, 2), random(0, 3));
+    }
     this.position = position.copy(); //puts in the position of the meteor
     this.lifespan = 100.0; //how long the meteor sparkles show (decreases) 
 };
