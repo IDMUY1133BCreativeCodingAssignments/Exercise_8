@@ -49,16 +49,17 @@ var Meteor = function(position, whichVel){
     this.lifespan = 100.0; //how long the meteor sparkles show (decreases) 
     
     if(whichVel == 0){ //whichVel changes each meteor's motion to make them unique. also changes color within if statement  
-    this.velocity = createVector(random(2, 3), random(2, 3)); //is a straightish line (tail of meteor)
+    this.velocity = createVector(random(2, 3), random(2, 3)); //is a straightish line (tail of meteor) (only positive x and ys possible)
         fill(232, 142, 48, this.lifespan);
     }
     if(whichVel == 1){
-        this.velocity = createVector(random(-1.5, 1.5), random(-1.5, 1.5));
+        this.velocity = createVector(random(-1.5, 1.5), random(-1.5, 1.5)); //wil go out in any direction 
        fill(204, 167, 255, this.lifespan); //opacity not working? 
     }
     if(whichVel == 2){
         this.velocity = createVector(random(-4, -2), random(-3, 3 ));
         this.acceleration = createVector(-.2, .2);
+        //speeds up/slows down particles 
         fill(58, 190, 255, this.lifespan);
     }
     
