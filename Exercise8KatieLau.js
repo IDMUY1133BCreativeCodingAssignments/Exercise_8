@@ -1,57 +1,44 @@
 //http://p5js.org/examples/examples/Simulate_Particle_System.php
 
-var meteorArray = [];
-var colors = []; //changes colors of meteors ? 
+var meteorArray = []; //array of meteor systems 
 
-var velocityXArray = []; //three different velocities -> three different motions ? 
-var velocityYArray = [];
-
-
-var firstLocX = 180;
+var firstLocX = 100; //location of first system 
 var firstLocY = 100;
 
 function setup() {
-  background(0);
-  angleMode(DEGREES);
-  createCanvas(720, 400);
-  //system = new ParticleSystem(createVector(width/2, height/2)); 
+  background(100);
+  createCanvas(700, 700);
   
   for(var i = 0; i < 3; i++){
-    meteorArray.push(new MeteorSystem(createVector(firstLocX, firstLocY)));  
-    firstLocX = firstLocX + 100;
-    firstLocY = firstLocY + 25;
+    meteorArray.push(new MeteorSystem(createVector(firstLocX, firstLocY)));  //a system of systems, essentially  
+    firstLocX = firstLocX + 250; //location of each thing 
+    firstLocY = firstLocY + 150;
   }
 }
 
 function draw() {
-    background(0);  
+    background(100);  
     for(var i = 0; i <= meteorArray.length - 1; i++)
     {
-        meteorArray[i].addMeteors(i);
-        meteorArray[i].run();
+        meteorArray[i].addMeteors(i); //pushes individual meteors into meteorARray
+        meteorArray[i].run(i); //updates and displays the meteors
     }
 }
 
-/*
-function mousePressed(){
-    meteorArray.push(new MeteorSystem(createVector(mouseX, mouseY)));
-    
-}
-*/
-
 var MeteorSystem = function(position){
-  this.origin = position.copy();
-    this.meteors = []; //meteors in that system
+    this.origin = position.copy(); //take position of first object and copies it into origin 
+    this.meteors = []; //arrays for meteors in that system
 };
 
 MeteorSystem.prototype.addMeteors = function(num){  
-  this.meteors.push(new Meteor(this.origin, num));   
+  this.meteors.push(new Meteor(this.origin, num)); //pushs individual meteors into meteor Array, num is later used to determine what velocity / acceleration is applied to it. 
 };
 
 MeteorSystem.prototype.run = function(){
   for (var i = this.meteors.length - 1; i >= 0; i--) {
-    var m = this.meteors[i];
-    m.run();
+    var m = this.meteors[i]; //checks if meteors are alive/dead, if dead, gets rid of it
+      //starts from last array space instead of beginning in order to ensure no meteors gets skipped 
+    m.run(); //updates and displays each set of meteors
     if (m.isDead()) {
       this.meteors.splice(i, 1);
     }
@@ -59,31 +46,37 @@ MeteorSystem.prototype.run = function(){
 }; 
 
 var Meteor = function(position, whichVel){
-    //this.velocity = createVector(random(-1, 1), random(-1, 0)); //will only go in one general direction
-    if(whichVel == 0){
-    this.velocity = createVector(random(2, 3), random(2, 3)); //is a straight ish line (tail of meteor)
+    this.lifespan = 100.0; //how long the meteor sparkles show (decreases) 
+    
+    if(whichVel == 0){ //whichVel changes each meteor's motion to make them unique. also changes color within if statement  
+    this.velocity = createVector(random(2, 3), random(2, 3)); //is a straightish line (tail of meteor)
+        fill(232, 142, 48, this.lifespan);
     }
     if(whichVel == 1){
-        this.velocity = createVector(random(-1, 1), random(-1, 0));
+        this.velocity = createVector(random(-1.5, 1.5), random(-1.5, 1.5));
+       fill(204, 167, 255, this.lifespan); //opacity not working? 
     }
     if(whichVel == 2){
-        this.velocity = createVector(random(4, 2), random(0, 3));
+        this.velocity = createVector(random(-4, -2), random(-3, 3 ));
+        this.acceleration = createVector(-.2, .2);
+        fill(58, 190, 255, this.lifespan);
     }
+    
     this.position = position.copy(); //puts in the position of the meteor
-    this.lifespan = 100.0; //how long the meteor sparkles show (decreases) 
 };
 
 Meteor.prototype.update = function(){
+  this.velocity.add(this.acceleration); //adds acceleration to velocity
   this.position.add(this.velocity); //formula for making vectors move (position + speed basically)
-  this.lifespan -= 1.5; //decreases lifespan longer it is out 
+  this.lifespan -= 2.2; //decreases lifespan until it eventually runs out 
 };
 
 Meteor.prototype.display = function(){
-  stroke(200, this.lifespan); //uses this.lifespan for opacity 
-  strokeWeight(2); //weight of the ellipses 
-  fill(255, 255, 28, this.lifespan); //opacity is directionally proportional to the opacity 
+  stroke(0, this.lifespan); //uses this.lifespan for opacity 
+  strokeWeight(1); //stroke weight of the rectangles 
+  // fill(192, 255, 192, this.lifespan);
     for(var i = 0; i < 10; i++){
-    rect(this.position.x, this.position.y, 10, 10);  //make smaller over time? (maybe?) 
+    rect(this.position.x, this.position.y, 20, 20); //displays all the rectangles (10 at a time per frame)
     }
 };
 
@@ -97,6 +90,6 @@ if (this.lifespan < 0) { //checks if is alive or dead to get rid of it from the 
 
 Meteor.prototype.run = function(){
     this.update(); //continuously changing location of squares 
-    this.display();
+    this.display(); //displays the rectangles based on update coordinates 
 };
 
