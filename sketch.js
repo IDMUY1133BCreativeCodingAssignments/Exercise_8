@@ -1,17 +1,17 @@
-var system;
+var system; 
 
 function setup() {
   createCanvas(1000, 1000);
-  system = new ParticleSystem(createVector(width/15, 50));
+  system = new ParticleSystem(createVector(width/15, 50));  //system is a variable of the class, particleSystem
 }
 
 function draw() {
   background(255,23,100);
-  system.addParticle();
-  system.run();
+  system.addParticle();  
+  system.run();      //calls update and display functions
 }
 
-// A simple Particle class
+// A Particle class
 var Particle = function(position) {
   this.acceleration = createVector(10, 10);
   this.velocity = createVector(random(-3, 3), random(-3, 0));
@@ -45,7 +45,6 @@ Particle.prototype.display = function() {
 
 };
 
-// Is the particle still useful?
 Particle.prototype.gone = function(){
   if (this.lifespan < 0) {
     return true;
@@ -65,7 +64,7 @@ ParticleSystem.prototype.addParticle = function() {
 };
 
 ParticleSystem.prototype.run = function() {
-  for (var i = this.particles.length-1; i >= 0; i--) {
+  for (var i = this.particles.length-1; i >= 0; i--) {  
     var p = this.particles[i];
     p.run();
     if (p.gone()) {
