@@ -1,13 +1,15 @@
+//referred to http://p5js.org/examples/examples/Simulate_Particle_System.php and the nature of code
+
 var system; 
 
 function setup() {
-  createCanvas(1000, 1000);
+  createCanvas(1000, 1000);  //size
   system = new ParticleSystem(createVector(width/15, 50));  //system is a variable of the class, particleSystem
 }
 
 function draw() {
-  background(255,23,100);
-  system.addParticle();  
+  background(255,23,100);  //color
+  system.addParticle();  //new particle is created
   system.run();      //calls update and display functions
 }
 
@@ -46,7 +48,7 @@ Particle.prototype.display = function() {
 };
 
 Particle.prototype.gone = function(){
-  if (this.lifespan < 0) {
+  if (this.lifespan <= 0) {
     return true;
   } else {
     return false;
